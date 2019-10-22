@@ -7,7 +7,7 @@
     tools:context=".MainActivity">
 
     <ImageView
-        android:id="@+id/imageView"
+        android:id="@+id/imageView1"
         android:layout_width="300dp"
         android:layout_height="200dp"
         app:layout_constraintBottom_toTopOf="@+id/imageView3"
@@ -15,6 +15,7 @@
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        android:onClick="onClick"
         app:srcCompat="@drawable/img10" />
 
     <ImageView
@@ -24,8 +25,9 @@
         app:layout_constraintBottom_toTopOf="@+id/imageView4"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/imageView"
+        app:layout_constraintStart_toEndOf="@+id/imageView1"
         app:layout_constraintTop_toTopOf="parent"
+        android:onClick="onClick"
         app:srcCompat="@drawable/img2" />
 
     <ImageView
@@ -36,7 +38,8 @@
         app:layout_constraintEnd_toStartOf="@+id/imageView4"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView"
+        app:layout_constraintTop_toBottomOf="@+id/imageView1"
+        android:onClick="onClick"
         app:srcCompat="@drawable/img13" />
 
     <ImageView
@@ -49,5 +52,6 @@
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/imageView3"
         app:layout_constraintTop_toBottomOf="@+id/imageView2"
+        android:onClick="onClick"
         app:srcCompat="@drawable/img5" />
 </androidx.constraintlayout.widget.ConstraintLayout>
