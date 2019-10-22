@@ -2,11 +2,13 @@ package com.stdio.gamesample;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Dialog;
 import android.content.pm.ActivityInfo;
 import android.media.MediaPlayer;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
+import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
 
@@ -21,6 +23,7 @@ public class MainActivity extends AppCompatActivity {
     MediaPlayer mPlayer;
     ArrayList<ContentModel> contentModelList;
     int id = 0;
+    Dialog imageDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,9 +72,23 @@ public class MainActivity extends AppCompatActivity {
         if (view.getId() == contentModelList.get(id).rightAnswerButtonId) {
             playSound(R.raw.answer_correct);
             waitingToCreateNextQuestion();
+            imageDialog = new Dialog(this, R.style.edit_AlertDialog_style);
+            imageDialog.setContentView(R.layout.activity_start_dialog);
+
+
+            ImageView imageView = (ImageView) imageDialog.findViewById(R.id.start_img);
+            imageView.setImageDrawable(((ImageView)findViewById(contentModelList.get(id).rightAnswerButtonId)).getDrawable());
+            imageDialog.show();
+
+            imageDialog.setCanceledOnTouchOutside(true); // Sets whether this dialog is
+            Window w = imageDialog.getWindow();
+            WindowManager.LayoutParams lp = w.getAttributes();
+            lp.x = 0;
+            lp.y = 40;
+            imageDialog.onWindowAttributesChanged(lp);
         }
         else {
-
+            playSound(R.raw.wrong_answer);
         }
     }
 
@@ -95,7 +112,8 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected Void doInBackground(Void... voids) {
             try{
-                Thread.sleep(500);
+                Thread.sleep(1000);
+                imageDialog.cancel();
             }catch (InterruptedException e){
                 e.printStackTrace();
             }
