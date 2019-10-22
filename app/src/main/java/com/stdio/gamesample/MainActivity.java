@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 
@@ -22,6 +23,7 @@ public class MainActivity extends AppCompatActivity {
     ImageView imageView1, imageView2, imageView3, imageView4;
     MediaPlayer mPlayer;
     ArrayList<ContentModel> contentModelList;
+    ArrayList <Integer> antiClone = new ArrayList<>();
     int id = 0;
     Dialog imageDialog;
 
@@ -46,16 +48,28 @@ public class MainActivity extends AppCompatActivity {
 
     private int getRandomNumber (int limit){
         Random randomNumber = new Random();
-        return randomNumber.nextInt(limit);
+        int elementId = randomNumber.nextInt(limit);
+        if (antiClone.contains(elementId)){
+            elementId = getRandomNumber(limit);
+        }
+        else{
+            antiClone.add(elementId);
+        }
+        return elementId;
     }
 
     protected void setViewsContent() {
-        id = getRandomNumber(5);
-        playSound(contentModelList.get(id).questionSoundId);
-        Glide.with(this).load(contentModelList.get(id).imgId1).into(imageView1);
-        Glide.with(this).load(contentModelList.get(id).imgId2).into(imageView2);
-        Glide.with(this).load(contentModelList.get(id).imgId3).into(imageView3);
-        Glide.with(this).load(contentModelList.get(id).imgId4).into(imageView4);
+        if (contentModelList.size() != antiClone.size()) {
+            id = getRandomNumber(5);
+            playSound(contentModelList.get(id).questionSoundId);
+            Glide.with(this).load(contentModelList.get(id).imgId1).into(imageView1);
+            Glide.with(this).load(contentModelList.get(id).imgId2).into(imageView2);
+            Glide.with(this).load(contentModelList.get(id).imgId3).into(imageView3);
+            Glide.with(this).load(contentModelList.get(id).imgId4).into(imageView4);
+        }
+        else {
+            Toast.makeText(this, "That's all", Toast.LENGTH_SHORT).show();
+        }
     }
 
     protected void getData() {
@@ -72,24 +86,28 @@ public class MainActivity extends AppCompatActivity {
         if (view.getId() == contentModelList.get(id).rightAnswerButtonId) {
             playSound(R.raw.answer_correct);
             waitingToCreateNextQuestion();
-            imageDialog = new Dialog(this, R.style.edit_AlertDialog_style);
-            imageDialog.setContentView(R.layout.activity_start_dialog);
-
-
-            ImageView imageView = (ImageView) imageDialog.findViewById(R.id.start_img);
-            imageView.setImageDrawable(((ImageView)findViewById(contentModelList.get(id).rightAnswerButtonId)).getDrawable());
-            imageDialog.show();
-
-            imageDialog.setCanceledOnTouchOutside(true); // Sets whether this dialog is
-            Window w = imageDialog.getWindow();
-            WindowManager.LayoutParams lp = w.getAttributes();
-            lp.x = 0;
-            lp.y = 40;
-            imageDialog.onWindowAttributesChanged(lp);
+            startImageDialog();
         }
         else {
             playSound(R.raw.wrong_answer);
         }
+    }
+
+    private void startImageDialog() {
+        imageDialog = new Dialog(this, R.style.edit_AlertDialog_style);
+        imageDialog.setContentView(R.layout.activity_start_dialog);
+
+
+        ImageView imageView = (ImageView) imageDialog.findViewById(R.id.start_img);
+        imageView.setImageDrawable(((ImageView)findViewById(contentModelList.get(id).rightAnswerButtonId)).getDrawable());
+        imageDialog.show();
+
+        imageDialog.setCanceledOnTouchOutside(true); // Sets whether this dialog is
+        Window w = imageDialog.getWindow();
+        WindowManager.LayoutParams lp = w.getAttributes();
+        lp.x = 0;
+        lp.y = 40;
+        imageDialog.onWindowAttributesChanged(lp);
     }
 
     private void playSound (int soundId) {
